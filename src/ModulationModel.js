@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { fft } from 'fft-js';
+import './main.css';
 
 function ModulationModel() {
     const [carrierFrequency, setCarrierFrequency] = useState(100);
@@ -10,24 +11,48 @@ function ModulationModel() {
     const signalLength = 4096;
     const samplingRate = signalLength;
 
-    const handleCarrierFrequencyChange = (e) => {
-        const newFrequency = e.target.valueAsNumber;
-        if (newFrequency > 0) {
-            setCarrierFrequency(newFrequency);
+    const [newFreqCar, setNewFreqCar] = useState(100);
+    const [newFreqInf, setNewFreqInf] = useState(10);
+    const [newInd, setNewInd] = useState(0.5);
+
+    const [showModalFreq, setShowModalFreq] = useState(false);
+    const [showModalInd, setShowModalInd] = useState(false);
+
+    const handleCloseModalFreq = () => {
+        setShowModalFreq(false);
+    }
+
+    const handleCloseModalInd = () => {
+        setShowModalInd(false);
+    }
+
+    const handleButton = () => {
+        handleCarrierFrequencyChange();
+        handleInformationFrequencyChange();
+        handleModulationIndexChange();
+    }
+
+    const handleCarrierFrequencyChange = () => {
+        if (newFreqCar <= 0) {
+            setShowModalFreq(true);
+        } else {
+            setCarrierFrequency(newFreqCar);
         }
     };
 
-    const handleInformationFrequencyChange = (e) => {
-        const newFrequency = e.target.valueAsNumber;
-        if (newFrequency > 0) {
-            setInformationFrequency(newFrequency);
+    const handleInformationFrequencyChange = () => {
+        if (newFreqInf <= 0) {
+            setShowModalFreq(true);
+        } else {
+            setInformationFrequency(newFreqInf);
         }
     };
 
-    const handleModulationIndexChange = (e) => {
-        const newIndex = e.target.valueAsNumber;
-        if (newIndex >= 0 && newIndex <= 1) {
-            setModulationIndex(newIndex);
+    const handleModulationIndexChange = () => {
+        if (newInd < 0 || newInd > 1) {
+            setShowModalInd(true);
+        } else {
+            setModulationIndex(newInd);
         }
     };
 
@@ -110,13 +135,19 @@ function ModulationModel() {
         <div>
             <h1>Modulation Model</h1>
             <p>
-                Carrier Frequency: <input type="number" value={carrierFrequency} onChange={(e) => handleCarrierFrequencyChange(e)} />
+                Carrier Frequency: <input type="number" value={newFreqCar}
+                                          onChange={(e) => setNewFreqCar(e.target.valueAsNumber)}/>
             </p>
             <p>
-                Information Frequency: <input type="number" value={informationFrequency} onChange={(e) => handleInformationFrequencyChange(e)} />
+                Information Frequency: <input type="number" value={newFreqInf}
+                                              onChange={(e) => setNewFreqInf(e.target.valueAsNumber)}/>
             </p>
             <p>
-                Modulation Index: <input type="number" value={modulationIndex} onChange={(e) => handleModulationIndexChange(e)} />
+                Modulation Index: <input type="number" value={newInd}
+                                         onChange={(e) => setNewInd(e.target.valueAsNumber)}/>
+            </p>
+            <p>
+                <button onClick={handleButton}>Построить</button>
             </p>
             {carrierSignalPlot}
             {informationSignalPlot}
@@ -124,6 +155,24 @@ function ModulationModel() {
             {carrierSpectrumPlot}
             {informationSpectrumPlot}
             {modulatedSpectrumPlot}
+            {showModalFreq && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <h2>Предупреждение</h2>
+                        <p>Частота должна быть положительной</p>
+                        <button onClick={handleCloseModalFreq}>Попробую другую</button>
+                    </div>
+                </div>
+            )}
+            {showModalInd && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <h2>Предупреждение</h2>
+                        <p>Индекс модуляции должен быть в пределах от 0 до 1</p>
+                        <button onClick={handleCloseModalInd}>Попробую другой</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
