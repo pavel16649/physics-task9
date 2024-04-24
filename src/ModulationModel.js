@@ -132,20 +132,22 @@ function ModulationModel() {
     );
 
     return (
-        <div>
+        <div className='body'>
             <h1>Modulation Model</h1>
-            <p>
-                Carrier Frequency: <input type="number" value={newFreqCar}
-                                          onChange={(e) => setNewFreqCar(e.target.valueAsNumber)}/>
-            </p>
-            <p>
-                Information Frequency: <input type="number" value={newFreqInf}
-                                              onChange={(e) => setNewFreqInf(e.target.valueAsNumber)}/>
-            </p>
-            <p>
-                Modulation Index: <input type="number" value={newInd}
-                                         onChange={(e) => setNewInd(e.target.valueAsNumber)}/>
-            </p>
+            <div className='inputs'>
+                <div className='input'>
+                    Carrier Frequency: <input type="number" value={newFreqCar}
+                                              onChange={(e) => setNewFreqCar(e.target.valueAsNumber)}/>
+                </div>
+                <div className='input'>
+                    Information Frequency: <input type="number" value={newFreqInf}
+                                                  onChange={(e) => setNewFreqInf(e.target.valueAsNumber)}/>
+                </div>
+                <div className='input'>
+                    Modulation Index: <input type="number" value={newInd}
+                                             onChange={(e) => setNewInd(e.target.valueAsNumber)}/>
+                </div>
+            </div>
             <p>
                 <button onClick={handleButton}>Построить</button>
             </p>
